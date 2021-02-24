@@ -1,0 +1,94 @@
+from ResNet import *
+from datasetGen import *
+from trainer import *
+import torch.nn.utils.prune as prune
+
+def pruner(model,dim):
+
+
+
+    for name, module in model.named_modules():
+        # prune 20% of connections in all 2D-conv layers
+        if isinstance(module, torch.nn.Conv2d):
+            prune.ln_structured(module, name='weight', amount=0.3, n=2, dim=dim)
+
+        # prune 40% of connections in all linear layers
+        elif isinstance(module, torch.nn.Linear):
+            prune.ln_structured(module, name='weight', amount=0, n=2, dim=dim)
+
+    return model
+
+
+def clean(model):
+    for name, module in model.named_modules():
+        if isinstance(module, torch.nn.Conv2d):
+            prune.remove(module, name='weight')
+
+    # prune 40% of connections in all linear layers
+        elif isinstance(module, torch.nn.Linear):
+            prune.remove(module, name='weight')
+    return model
+
+def countZeroWeights(model):
+    zeros = 0
+    for param in model.named_buffers():
+        if param is not None:
+            zeros += torch.sum((param == 0)).data.item()
+    return zeros
+
+def prun(pru,t):
+    trainloader = DataLoader(minicifar_train_im, batch_size=32, sampler=train_sampler)
+    validloader = DataLoader(minicifar_train_im, batch_size=32, sampler=valid_sampler)
+    testloader = DataLoader(minicifar_test_im, batch_size=32)
+
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model = ResNet18()
+    model.to(device=device)
+
+    print('Using device ' + str(device))
+    PATH = 'data/modelcp3.pth'
+    checkpoint = torch.load(PATH)
+    model.load_state_dict(checkpoint)
+    model.to(device=device)
+    criterion = nn.CrossEntropyLoss()
+    courbe =[]
+    size=[]
+    courbe += [evaluation(model, test_loader, criterion, device)]
+    print_nonzeros(model)
+    size += [print_nonzeros(model)]
+    dim=0
+    for i in range(pru):
+        pruner(model,dim)
+        dim+=1
+        dim%=2
+        optimizer = torch.optim.SGD(model.parameters(), 1)
+        training(20, train_loader, valid_loader, model, criterion, optimizer, 0.5, device)
+        courbe+=[evaluation(model, test_loader, criterion, device)]
+        print_nonzeros(model)
+        size+=[print_nonzeros(model)]
+
+    clean(model)
+    evaluation(model, testloader, criterion, device)
+    torch.save(model.state_dict(), 'data/model222.pth')
+    return model,courbe,size
+
+def get_n_params(model):
+    pp=0
+    for p in list(model.parameters()):
+        nn=1
+        for s in list(p.size()):
+            nn = nn*s
+        pp += nn
+    print(pp)
+
+def print_nonzeros(model):
+    nonzero = total = 0
+    for name, p in model.named_buffers():
+        tensor = p.data.cpu().numpy()
+        nz_count = np.count_nonzero(tensor)
+        total_params = np.prod(tensor.shape)
+        nonzero += nz_count
+        total += total_params
+    print(f'alive: {nonzero}, pruned : {total - nonzero}, total: {total}, Compression rate : {total/nonzero:10.2f}x  ({100 * (total-nonzero) / total:6.2f}% pruned)')
+    return (100 * (total-nonzero) / total)
