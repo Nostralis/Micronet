@@ -22,13 +22,13 @@ for name, module in model.named_modules():
         # prune 20% of connections in all 2D-conv layers
     if isinstance(module, torch.nn.Conv2d):
             prune.ln_structured(module, name='weight', amount=0.65, n=2, dim=dim)
-    dim += 1
-    dim %= 2
-    optimizer = torch.optim.SGD(model.parameters(), 0.1)
-    training(100, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
-    courbe += [evaluation(model, test_loader, criterion, device)]
-    print_nonzeros(model)
-    size += [print_nonzeros(model)]
+dim += 1
+dim %= 2
+optimizer = torch.optim.SGD(model.parameters(), 0.1)
+training(100, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
+courbe += [evaluation(model, test_loader, criterion, device)]
+print_nonzeros(model)
+size += [print_nonzeros(model)]
 
 clean(model)
 evaluation(model, test_loader, criterion, device)
