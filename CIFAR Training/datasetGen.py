@@ -1,6 +1,7 @@
 import torchvision.transforms as transforms
 import numpy as np
 from torchvision.datasets import CIFAR10
+from torchvision.datasets import CIFAR100
 from torch.utils.data import DataLoader
 from torch.utils.data import Subset
 from torch.utils.data.sampler import SubsetRandomSampler

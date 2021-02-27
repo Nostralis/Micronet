@@ -7,13 +7,12 @@ from torch.utils.data.dataloader import DataLoader
 import time
 
 
-def training(n_epochs, train_loader, valid_loader, model, criterion, optimizer, factor, device, bina=True):  # FUNCTION TO BE COMPLETED
+def training(n_epochs, train_loader, valid_loader, model, criterion, optimizer, factor, device, bina=True, valid_loss_min = np.Inf):  # FUNCTION TO BE COMPLETED
 
     lamda = factor
     train_losses, valid_losses = [], []
-    valid_loss_min = np.Inf
     torch.autograd.set_detect_anomaly(True)
-    lr_scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, verbose=True, factor=lamda, patience=3)
+    lr_scheduler = optim.lr_scheduler.MultiStepLR(optimizer, verbose=True, milestones= [50,80], gamma = 0.1)
 
     if bina:
         for epoch in range(n_epochs):
@@ -43,7 +42,7 @@ def training(n_epochs, train_loader, valid_loader, model, criterion, optimizer, 
             valid_loss /= len(valid_loader.sampler)
             train_losses.append(train_loss)
             valid_losses.append(valid_loss)
-            lr_scheduler.step(valid_loss)
+            lr_scheduler.step()
             print(
                 'epoch: {} \ttraining Loss: {:.6f} \tvalidation Loss: {:.6f}'.format(epoch + 1, train_loss, valid_loss))
 
@@ -95,13 +94,13 @@ def training(n_epochs, train_loader, valid_loader, model, criterion, optimizer, 
                 torch.save(model.model.state_dict(), 'model.pt')
                 valid_loss_min = valid_loss
 
-    return train_losses, valid_losses
+    return train_losses, valid_losses, valid_loss_min
 
 def evaluation(model, test_loader, criterion, device):
 
   test_loss = 0.0
-  class_correct = list(0. for i in range(100))
-  class_total = list(0. for i in range(100))
+  class_correct = list(0. for i in range(10))
+  class_total = list(0. for i in range(10))
 
   model.eval()
   for data, label in test_loader:
