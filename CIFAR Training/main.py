@@ -3,10 +3,43 @@ import matplotlib.pyplot as plt
 import time
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = ResNet18()
-model.to(device=device)
-
 print('Using device ' + str(device))
+
+list_models = [[1, 1, 1], [1, 1, 1, 1], [2, 2, 2, 2]]
+print("les modèles prunés sont: " + str(list_models))
+
+courbe = []
+size = []
+
+for i in list_models:
+    model = ResNet18(i)
+    model.to(device=device)
+    print("modèle: " + str(i))
+    PATH = str(i) + ".pth"
+    checkpoint = torch.load(PATH)
+    model.load_state_dict(checkpoint)
+    model.to(device=device)
+    criterion = nn.CrossEntropyLoss()
+    dim = 0
+    courbe += [evaluation(model, test_loader, criterion, device)]
+    size += [print_nonzeros(model)]
+    for j in range(5):
+        print("étape numéro " + str(j) + " du prunage")
+        for name, module in model.named_modules():
+            # prune 20% of connections in all 2D-conv layers
+            if isinstance(module, torch.nn.Conv2d):
+                prune.ln_structured(module, name='weight', amount=0.2, n=2, dim=dim)
+        dim += 1
+        dim %= 2
+        optimizer = torch.optim.SGD(model.parameters(), 0.1, weight_decay=0.0005)
+        training(100, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
+        courbe += [evaluation(model, test_loader, criterion, device)]
+        size += [print_nonzeros(model)]
+    clean(model)
+    evaluation(model, test_loader, criterion, device)
+    torch.save(model.state_dict(), "model" + i + ".pth")
+
+""""
 PATH = '[1,1,1,1]/model[1,1,1,1].pth'
 checkpoint = torch.load(PATH)
 model.load_state_dict(checkpoint)
@@ -120,3 +153,5 @@ plt.ylabel('Accuracy')
 plt.plot(size,courbe)
 plt.xlabel('% of parameters pruned')
 plt.show()
+
+"""
