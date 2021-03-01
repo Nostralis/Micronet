@@ -37,7 +37,10 @@ for i in list_models:
         size += [print_nonzeros(model)]
     #clean(model)
     evaluation(model, test_loader, criterion, device)
-    torch.save(model.state_dict(), "model" + i + ".pth")
+    torch.save(model, "model" + i + ".pth")
+
+print(courbe)
+print(size)
 
 """"
 PATH = '[1,1,1,1]/model[1,1,1,1].pth'
