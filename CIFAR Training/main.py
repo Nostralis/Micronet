@@ -35,7 +35,7 @@ for i in list_models:
         training(100, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
         courbe += [evaluation(model, test_loader, criterion, device)]
         size += [print_nonzeros(model)]
-    clean(model)
+    #clean(model)
     evaluation(model, test_loader, criterion, device)
     torch.save(model.state_dict(), "model" + i + ".pth")
 
