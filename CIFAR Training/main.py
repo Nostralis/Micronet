@@ -5,7 +5,7 @@ import time
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device ' + str(device))
 
-list_models = [[1, 1, 1], [1, 1, 1, 1], [2, 2, 2, 2]]
+list_models = [[1, 1, 1, 1], [2, 2, 2, 2]]
 print("les modèles prunés sont: " + str(list_models))
 
 courbe = []

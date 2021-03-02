@@ -157,7 +157,7 @@ def ResNet18(j):
     if len(j) == 3:
         return ResNet3(BasicBlock, j)
     else:
-        return Resnet(BasicBlock,j)
+        return ResNet(BasicBlock,j)
 
 
 def ResNet34():
