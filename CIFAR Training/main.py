@@ -37,7 +37,7 @@ for i in list_models:
         size += [print_nonzeros(model)]
     #clean(model)
     evaluation(model, test_loader, criterion, device)
-    torch.save(model, "model" + i + ".pth")
+    torch.save(model, "model" + str(i) + ".pth")
 
 print(courbe)
 print(size)
