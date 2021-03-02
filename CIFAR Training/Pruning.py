@@ -4,11 +4,17 @@ from trainer import *
 import torch.nn.utils.prune as prune
 
 
-def pruner(model, dim):
+def pruner(model, dim, lim):
     for name, module in model.named_modules():
         # prune 20% of connections in all 2D-conv layers
-        if isinstance(module, torch.nn.Conv2d):
-            prune.ln_structured(module, name='weight', amount=0.3, n=2, dim=dim)
+        if name != "conv1" and len(name)>0:
+
+            layer = name.split(".")[0]
+            lay = layer[:-1]
+            nb = layer[-1]
+            if lay == 'layer' and int(nb) > lim:
+                if isinstance(module, torch.nn.Conv2d):
+                    prune.ln_structured(module, name='weight', amount=0.3, n=2, dim=dim)
 
     return model
 
@@ -84,5 +90,6 @@ def print_nonzeros(model):
         total_params = np.prod(tensor.shape)
         nonzero += nz_count
         total += total_params
+        print(f'{name:20} | nonzeros = {nz_count:7} / {total_params:7} ({100 * nz_count / total_params:6.2f}%) | total_pruned = {total_params - nz_count :7} | shape = {tensor.shape}')
     print(f'alive: {nonzero}, pruned : {total - nonzero}, total: {total}, Compression rate : {total/nonzero:10.2f}x  ({100 * (total-nonzero) / total:6.2f}% pruned)')
     return 100 * (total-nonzero) / total
