@@ -1,3 +1,6 @@
+import torch
+from torchvision.models import resnet18
+import torch_pruning as tp
 from Pruning import *
 import matplotlib.pyplot as plt
 import time
@@ -10,7 +13,7 @@ print("les modèles prunés sont: " + str(list_models))
 
 courbe = []
 size = []
-
+miles = [5,8,20]
 for i in list_models:
     model = ResNet18(i)
     model.to(device=device)
@@ -21,21 +24,23 @@ for i in list_models:
     model.to(device=device)
     criterion = nn.CrossEntropyLoss()
     dim = 0
+    lim = 0
     courbe += [evaluation(model, test_loader, criterion, device)]
     size += [print_nonzeros(model)]
-    for j in range(5):
+    for j in range(20):
+        if j == miles[lim]:
+            lim += 1
         print("étape numéro " + str(j) + " du prunage")
-        for name, module in model.named_modules():
-            # prune 20% of connections in all 2D-conv layers
-            if isinstance(module, torch.nn.Conv2d):
-                prune.ln_structured(module, name='weight', amount=0.2, n=2, dim=dim)
+        pruner(model, dim, lim, 0.1)
         dim += 1
         dim %= 2
         optimizer = torch.optim.SGD(model.parameters(), 0.1, weight_decay=0.0005)
-        training(100, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
+        training(80, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
         courbe += [evaluation(model, test_loader, criterion, device)]
         size += [print_nonzeros(model)]
     #clean(model)
+    optimizer = torch.optim.SGD(model.parameters(), 0.01, weight_decay=0.0005)
+    training(80, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
     evaluation(model, test_loader, criterion, device)
     torch.save(model, "model" + str(i) + ".pth")
 
