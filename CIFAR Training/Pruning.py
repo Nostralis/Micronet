@@ -4,7 +4,7 @@ from trainer import *
 import torch.nn.utils.prune as prune
 
 
-def pruner(model, dim, lim):
+def pruner(model, dim, lim, pruning_rate):
     for name, module in model.named_modules():
         # prune 20% of connections in all 2D-conv layers
         if name != "conv1" and len(name)>0:
@@ -14,7 +14,7 @@ def pruner(model, dim, lim):
             nb = layer[-1]
             if lay == 'layer' and int(nb) > lim:
                 if isinstance(module, torch.nn.Conv2d):
-                    prune.ln_structured(module, name='weight', amount=0.3, n=2, dim=dim)
+                    prune.ln_structured(module, name='weight', amount=pruning_rate, n=2, dim=dim)
 
     return model
 
