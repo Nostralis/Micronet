@@ -35,7 +35,7 @@ for i in list_models:
         dim += 1
         dim %= 2
         optimizer = torch.optim.SGD(model.parameters(), 0.1, weight_decay=0.0005)
-        training(80, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
+        training(40, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
         courbe += [evaluation(model, test_loader, criterion, device)]
         size += [print_nonzeros(model)]
     #clean(model)

@@ -12,7 +12,7 @@ def training(n_epochs, train_loader, valid_loader, model, criterion, optimizer, 
     lamda = factor
     train_losses, valid_losses = [], []
     torch.autograd.set_detect_anomaly(True)
-    lr_scheduler = optim.lr_scheduler.MultiStepLR(optimizer, verbose=True, milestones= [40,65], gamma = 0.1)
+    lr_scheduler = optim.lr_scheduler.MultiStepLR(optimizer, verbose=True, milestones= [25,35], gamma = 0.1)
 
     if bina:
         for epoch in range(n_epochs):

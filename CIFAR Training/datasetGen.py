@@ -103,7 +103,7 @@ def generate_subset(dataset, n_classes, reducefactor, n_ex_class_init):
 
 
 
-batch_size = 32
+batch_size = 512
 valid_size = 0.2
 
 
