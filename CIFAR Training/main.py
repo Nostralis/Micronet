@@ -42,7 +42,7 @@ for i in list_models:
     optimizer = torch.optim.SGD(model.parameters(), 0.01, weight_decay=0.0005)
     training(80, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
     evaluation(model, test_loader, criterion, device)
-    torch.save(model, "model" + str(i) + ".pth")
+    torch.save(model, "model_more_structured" + str(i) + ".pth")
 
 print(courbe)
 print(size)
