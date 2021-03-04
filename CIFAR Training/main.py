@@ -8,12 +8,12 @@ import time
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device ' + str(device))
 
-list_models = [[2, 2, 2, 2]]
+list_models = [[1,1,1]]
 print("les modèles prunés sont: " + str(list_models))
 
 courbe = []
 size = []
-miles = [5,8,20]
+miles = [5,8]
 for i in list_models:
     model = ResNet18(i)
     model.to(device=device)
@@ -27,7 +27,7 @@ for i in list_models:
     lim = 0
     courbe += [evaluation(model, test_loader, criterion, device)]
     size += [print_nonzeros(model)]
-    for j in range(20):
+    for j in range(15):
         if j == miles[lim]:
             lim += 1
         print("étape numéro " + str(j) + " du prunage")
