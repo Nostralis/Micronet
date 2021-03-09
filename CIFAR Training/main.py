@@ -8,12 +8,12 @@ import time
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device ' + str(device))
 
-list_models = [[1,1,1,1]]
+list_models = [[2,2,2]]
 print("les modèles prunés sont: " + str(list_models))
 
 courbe = []
 size = []
-miles = [5,8,15,20]
+miles = [5,8,15]
 for i in list_models:
     model = ResNet18(i)
     model.to(device=device)
