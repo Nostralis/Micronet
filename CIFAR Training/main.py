@@ -18,11 +18,14 @@ for i in list_models:
     model = ResNet18(i)
     model.to(device=device)
     print("modèle: " + str(i))
-    PATH = str(i) + ".pth"
-    checkpoint = torch.load(PATH)
-    model.load_state_dict(checkpoint)
-    model.to(device=device)
+    #PATH = str(i) + ".pth"
+    #checkpoint = torch.load(PATH)
+    #model.load_state_dict(checkpoint)
+    #model.to(device=device)
+    optimizer = torch.optim.SGD(model.parameters(), 0.1, weight_decay=0.0005)
     criterion = nn.CrossEntropyLoss()
+    training(150, train_loader, valid_loader, model, criterion, optimizer, 0.1, device, milestones = [80,125])
+    torch.save(model, "model_trained" + str(i) + ".pth")
     dim = 0
     lim = 0
     courbe += [evaluation(model, test_loader, criterion, device)]

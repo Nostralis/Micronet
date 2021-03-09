@@ -7,7 +7,7 @@ from torch.utils.data.dataloader import DataLoader
 import time
 
 
-def training(n_epochs, train_loader, valid_loader, model, criterion, optimizer, factor, device, bina=True, valid_loss_min = np.Inf):  # FUNCTION TO BE COMPLETED
+def training(n_epochs, train_loader, valid_loader, model, criterion, optimizer, factor, device, bina=True, valid_loss_min = np.Inf, milestones = [25,35]):  # FUNCTION TO BE COMPLETED
 
     lamda = factor
     train_losses, valid_losses = [], []
