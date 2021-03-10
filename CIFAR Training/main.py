@@ -15,13 +15,10 @@ courbe = []
 size = []
 miles = [5,8,15]
 for i in list_models:
-    model = ResNet18(i)
-    model.to(device=device)
     print("modèle: " + str(i))
     PATH = "model_trained" + str(i) + ".pth"
     #PATH = str(i) + ".pth"
-    checkpoint = torch.load(PATH)
-    model.load_state_dict(checkpoint)
+    model = torch.load(PATH)
     model.to(device=device)
     optimizer = torch.optim.SGD(model.parameters(), 0.1, weight_decay=0.0005)
     criterion = nn.CrossEntropyLoss()
