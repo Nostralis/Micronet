@@ -7,12 +7,12 @@ from torch.utils.data.dataloader import DataLoader
 import time
 
 
-def training(n_epochs, train_loader, valid_loader, model, criterion, optimizer, factor, device, bina=True, valid_loss_min = np.Inf, milestones = [25,35]):  # FUNCTION TO BE COMPLETED
+def training(n_epochs, train_loader, valid_loader, model, criterion, optimizer, factor, device, bina=True, valid_loss_min = np.Inf, milestone = [25,35]):  # FUNCTION TO BE COMPLETED
 
     lamda = factor
     train_losses, valid_losses = [], []
     torch.autograd.set_detect_anomaly(True)
-    lr_scheduler = optim.lr_scheduler.MultiStepLR(optimizer, verbose=True, milestones= [25,35], gamma = 0.1)
+    lr_scheduler = optim.lr_scheduler.MultiStepLR(optimizer, verbose=True, milestones= milestone, gamma = 0.1)
 
     if bina:
         for epoch in range(n_epochs):
