@@ -16,6 +16,8 @@ model.to(device=device)
 
 courbe = []
 size = []
+criterion = nn.CrossEntropyLoss()
+
 courbe += [evaluation(model, test_loader, criterion, device)]
 size += [print_nonzeros(model)]
 
