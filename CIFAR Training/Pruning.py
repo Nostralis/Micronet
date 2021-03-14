@@ -18,7 +18,7 @@ def pruner(model, dim, lim, pruning_rate):
 
     return model
 
-def pruner100(model, dim, limb_lock, lim_lay, pruning_rate):
+def pruner100(model, dim, lim_block, lim_lay, pruning_rate):
     for name, module in model.named_modules():
         # prune 20% of connections in all 2D-conv layers
         if len(name) > 0:
