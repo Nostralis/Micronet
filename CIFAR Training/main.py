@@ -14,8 +14,10 @@ model = torch.load(PATH)
 model.to(device=device)
 
 
-
-
+courbe = []
+size = []
+courbe += [evaluation(model, test_loader, criterion, device)]
+size += [print_nonzeros(model)]
 
 miles = [5,10,15,20]
 lim=0
