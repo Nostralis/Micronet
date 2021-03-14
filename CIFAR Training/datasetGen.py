@@ -65,6 +65,19 @@ trainset = CIFAR10(root='./data', train=True,
 testset = CIFAR10(root='./data', train=False,
                                        download=True, transform=transform_test)
 
+c100train = CIFAR100(rootdir, train=True, download=True, transform=transform_train)
+c100test = CIFAR100(rootdir, train=False, download=True, transform=transform_test)
+
+c100train_imagenet = CIFAR100(rootdir, train=True, download=True, transform=transform_train_imagenet)
+c100test_imagenet = CIFAR100(rootdir, train=False, download=True, transform=transform_test_imagenet)
+
+
+trainset100 = CIFAR100(root='./data', train=True,
+                                        download=True, transform=transform_train)
+
+testset100 = CIFAR100(root='./data', train=False,
+                                       download=True, transform=transform_test)
+
 # Generating Mini-CIFAR
 #
 # CIFAR10 is sufficiently large so that training a model up to the state of the art performance will take approximately 3 hours on the 1060 GPU available on your machine.
@@ -103,7 +116,7 @@ def generate_subset(dataset, n_classes, reducefactor, n_ex_class_init):
 
 
 
-batch_size = 128
+batch_size = 32
 valid_size = 0.2
 
 
@@ -129,6 +142,7 @@ def create_data_loaders(batch_size, valid_size, train_data, test_data):  # FUNCT
     return train_loader, valid_loader, test_loader
 
 train_loader, valid_loader, test_loader = create_data_loaders(batch_size, valid_size, trainset, testset)
+train_loader100, valid_loader100, test_loader100 = create_data_loaders(batch_size, valid_size, trainset100, testset100)
 
 ### These dataloader are ready to be used to train for scratch
 minicifar_train = generate_subset(dataset=c10train, n_classes=n_classes_minicifar, reducefactor=R, n_ex_class_init=5000)

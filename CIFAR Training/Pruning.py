@@ -18,6 +18,21 @@ def pruner(model, dim, lim, pruning_rate):
 
     return model
 
+def pruner100(model, dim, limdense, limlay, pruning_rate):
+    for name, module in model.named_modules():
+        # prune 20% of connections in all 2D-conv layers
+        if len(name) > 0:
+            layer = name.split(".")
+            if len(layer) > 4:
+                if layer[2][:-1] == "denseblock":
+                    if layer[3][:-1] == "denselayer":
+                        block = int(layer[2][-1])
+                        lay = int(layer[3][-1])
+                        if block > lim_block:
+                            if lay > lim_lay:
+                                if isinstance(module, torch.nn.Conv2d):
+                                    prune.ln_structured(module, name='weight', amount=pruning_rate, n=2, dim=dim)
+
 
 def clean(model):
     for name, module in model.named_modules():

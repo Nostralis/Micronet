@@ -8,6 +8,46 @@ import time
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device ' + str(device))
 
+
+dense = torch.hub.load('pytorch/vision:v0.6.0', 'densenet121', pretrained=True)
+
+model = nn.Sequential(
+    dense,
+    nn.Linear(1000, 100))
+
+model.to(device=device)
+
+lim_block = 2
+lim_lay = 3
+
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(model.parameters(), 0.1, weight_decay=0.0005)
+
+training(100, train_loader, valid_loader, model, criterion, optimizer, 0.1, device, milestone=[50, 80])
+torch.save(model, "densenet_trained.pth")
+
+miles = [5,10,15,20]
+lim=0
+for j in range(20):
+    if j == miles[lim]:
+        lim += 1
+        print("étape numéro " + str(j) + " du prunage")
+        pruner100(model, dim,lim, 0, 0.1)
+        dim += 1
+        dim %= 2
+        optimizer = torch.optim.SGD(model.parameters(), 0.1, weight_decay=0.0005)
+        training(40, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
+        courbe += [evaluation(model, test_loader, criterion, device)]
+        size += [print_nonzeros(model)]
+
+    #clean(model)
+    optimizer = torch.optim.SGD(model.parameters(), 0.01, weight_decay=0.0005)
+    training(80, train_loader, valid_loader, model, criterion, optimizer, 0.1, device, milestone=[40,60])
+    evaluation(model, test_loader, criterion, device)
+    torch.save(model, "densenet_pruned_more_structured.pth")
+
+
+"""
 list_models = [[2,2,2]]
 print("les modèles prunés sont: " + str(list_models))
 
@@ -48,7 +88,7 @@ for i in list_models:
 print(courbe)
 print(size)
 
-""""
+
 PATH = '[1,1,1,1]/model[1,1,1,1].pth'
 checkpoint = torch.load(PATH)
 model.load_state_dict(checkpoint)
