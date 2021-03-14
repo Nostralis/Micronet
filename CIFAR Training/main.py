@@ -19,6 +19,7 @@ model.to(device=device)
 
 miles = [5,10,15,20]
 lim=0
+dim = 0
 for j in range(20):
     if j == miles[lim]:
         lim += 1
