@@ -9,42 +9,36 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device ' + str(device))
 
 
-dense = torch.hub.load('pytorch/vision:v0.6.0', 'densenet121', pretrained=True)
-
-model = nn.Sequential(
-    dense,
-    nn.Linear(1000, 100))
-
+PATH = "densenet_trained.pth"
+model = torch.load(PATH)
 model.to(device=device)
 
-lim_block = 2
-lim_lay = 3
 
-criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(), 0.1, weight_decay=0.0005)
 
-training(100, train_loader, valid_loader, model, criterion, optimizer, 0.1, device, milestone=[50, 80])
-torch.save(model, "densenet_trained.pth")
+
 
 miles = [5,10,15,20]
 lim=0
 for j in range(20):
     if j == miles[lim]:
         lim += 1
-        print("étape numéro " + str(j) + " du prunage")
-        pruner100(model, dim,lim, 0, 0.1)
-        dim += 1
-        dim %= 2
-        optimizer = torch.optim.SGD(model.parameters(), 0.1, weight_decay=0.0005)
-        training(40, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
-        courbe += [evaluation(model, test_loader, criterion, device)]
-        size += [print_nonzeros(model)]
+    print("étape numéro " + str(j) + " du prunage")
 
-    #clean(model)
-    optimizer = torch.optim.SGD(model.parameters(), 0.01, weight_decay=0.0005)
-    training(80, train_loader, valid_loader, model, criterion, optimizer, 0.1, device, milestone=[40,60])
-    evaluation(model, test_loader, criterion, device)
-    torch.save(model, "densenet_pruned_more_structured.pth")
+    pruner100(model, dim,lim, 0, 0.1)
+    criterion = nn.CrossEntropyLoss()
+    dim += 1
+    dim %= 2
+    optimizer = torch.optim.SGD(model.parameters(), 0.1, weight_decay=0.0005)
+    training(40, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
+    courbe += [evaluation(model, test_loader, criterion, device)]
+    size += [print_nonzeros(model)]
+    torch.save(model, "densenet_pruned_more_structured_etape_" + str(j) + ".pth")
+
+#clean(model)
+optimizer = torch.optim.SGD(model.parameters(), 0.01, weight_decay=0.0005)
+training(80, train_loader, valid_loader, model, criterion, optimizer, 0.1, device, milestone=[40,60])
+evaluation(model, test_loader, criterion, device)
+torch.save(model, "densenet_pruned_more_structured.pth")
 
 
 """
