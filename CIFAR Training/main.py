@@ -9,14 +9,26 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device ' + str(device))
 
 
-PATH = "densenet_trained.pth"
-model = torch.load(PATH)
+#PATH = "densenet_trained.pth"
+#model = torch.load(PATH)
+dense = torch.hub.load('pytorch/vision:v0.6.0', 'densenet121', pretrained=True)
+
+model =  nn.Sequential(
+    dense,
+    nn.Linear(1000,100)
+)
+
+
 model.to(device=device)
 
 
 courbe = []
 size = []
 criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(model.parameters(), 0.1, weight_decay=0.0005)
+
+print("début des 120 epochs")
+training(120,train_loader100,valid_loader100,model,criterion,optimizer,0.1,device,milestone=[50,90,120])
 
 courbe += [evaluation(model, test_loader100, criterion, device)]
 size += [print_nonzeros(model)]
