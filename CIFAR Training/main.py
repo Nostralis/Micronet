@@ -18,7 +18,7 @@ courbe = []
 size = []
 criterion = nn.CrossEntropyLoss()
 
-courbe += [evaluation(model, test_loader, criterion, device)]
+courbe += [evaluation(model, test_loader100, criterion, device)]
 size += [print_nonzeros(model)]
 
 miles = [5,10,15,20]
@@ -34,15 +34,15 @@ for j in range(20):
     dim += 1
     dim %= 2
     optimizer = torch.optim.SGD(model.parameters(), 0.1, weight_decay=0.0005)
-    training(40, train_loader, valid_loader, model, criterion, optimizer, 0.1, device)
-    courbe += [evaluation(model, test_loader, criterion, device)]
+    training(40, train_loader100, valid_loader100, model, criterion, optimizer, 0.1, device)
+    courbe += [evaluation(model, test_loader100, criterion, device)]
     size += [print_nonzeros(model)]
     torch.save(model, "densenet_pruned_more_structured_etape_" + str(j) + ".pth")
 
 #clean(model)
 optimizer = torch.optim.SGD(model.parameters(), 0.01, weight_decay=0.0005)
-training(80, train_loader, valid_loader, model, criterion, optimizer, 0.1, device, milestone=[40,60])
-evaluation(model, test_loader, criterion, device)
+training(80, train_loader100, valid_loader100, model, criterion, optimizer, 0.1, device, milestone=[40,60])
+evaluation(model, test_loader100, criterion, device)
 torch.save(model, "densenet_pruned_more_structured.pth")
 
 
