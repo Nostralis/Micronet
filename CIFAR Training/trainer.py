@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from torch.utils.data.dataloader import DataLoader
 import time
-
+#this is useless
 
 def training(n_epochs, train_loader, valid_loader, model, criterion, optimizer, factor, device, bina=True, valid_loss_min = np.Inf, milestone = [25,35]):  # FUNCTION TO BE COMPLETED
 
@@ -119,7 +119,7 @@ def evaluation(model, test_loader, criterion, device):
 
   test_loss = test_loss/len(test_loader.sampler)
   print('test Loss: {:.6f}\n'.format(test_loss))
-  for i in range(10)                                                                                       :
+  for i in range(100)                                                                                       :
     print('test accuracy of %d: %2d%% (%2d/%2d)' % (i, 100 * class_correct[i] / class_total[i], np.sum(class_correct[i]), np.sum(class_total[i])))
   print('\ntest accuracy (overall): %2.2f%% (%2d/%2d)' % (100. * np.sum(class_correct) / np.sum(class_total), np.sum(class_correct), np.sum(class_total)))
   return (100. * np.sum(class_correct) / np.sum(class_total))
