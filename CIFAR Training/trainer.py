@@ -99,8 +99,8 @@ def training(n_epochs, train_loader, valid_loader, model, criterion, optimizer, 
 def evaluation(model, test_loader, criterion, device):
 
   test_loss = 0.0
-  class_correct = list(0. for i in range(10))
-  class_total = list(0. for i in range(10))
+  class_correct = list(0. for i in range(100))
+  class_total = list(0. for i in range(100))
 
   model.eval()
   for data, label in test_loader:
