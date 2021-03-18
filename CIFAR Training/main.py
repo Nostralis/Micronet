@@ -19,8 +19,6 @@ teacher.load_state_dict(model)
 student.to(device)
 teacher.to(device)
 
-print(student)
-print(teacher)
 
 criterion = nn.CrossEntropyLoss()
 
