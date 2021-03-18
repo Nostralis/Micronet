@@ -275,8 +275,6 @@ def training_distillation(n_epochs, train_loader, valid_loader, model, teacher, 
                 output = model(data)  # forward pass: compute predicted outputs by passing inputs to the model
                 output_teacher = teacher(data)
                 # loss = criterion1(output, label) + criterion2(output, output_teacher)  # calculate the loss
-                print(output)
-                print(output_teacher)
                 loss = criterion2(output, output_teacher)
                 #loss = criterion1(output, label)
                 loss.backward()  # backward pass: compute gradient of the loss with respect to model parameters
