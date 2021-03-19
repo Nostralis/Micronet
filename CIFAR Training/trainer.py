@@ -261,8 +261,8 @@ def training_distillation(n_epochs, train_loader, valid_loader, model, teacher, 
     lamda = factor
     train_losses, valid_losses = [], []
     torch.autograd.set_detect_anomaly(True)
-    lr_scheduler = optim.lr_scheduler.MultiStepLR(optimizer, verbose=True, milestones=milestone, gamma=0.1)
-
+    #lr_scheduler = optim.lr_scheduler.MultiStepLR(optimizer, verbose=True, milestones=milestone, gamma=0.1)
+    lr_scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience = 10)
     if bina:
         for epoch in range(n_epochs):
             train_loss, valid_loss = 0, 0
@@ -280,7 +280,8 @@ def training_distillation(n_epochs, train_loader, valid_loader, model, teacher, 
                 loss = 0.05*criterion1(output, label) + 0.05*criterion2(output, output_teacher)  # calculate the loss
                 #loss = criterion2(output, output_teacher)
                 #loss = criterion1(output, label)
-                loss.backward()  # backward pass: compute gradient of the loss with respect to model parameters
+                #loss.backward()  # backward pass: compute gradient of the loss with respect to model parameters
+                lr_scheduler.step(valid_loss)
                 optimizer.step()  # perform a single optimization step (parameter update)
                 train_loss += loss.item() * data.size(0)  # update running training loss
 
