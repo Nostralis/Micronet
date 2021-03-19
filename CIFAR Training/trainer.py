@@ -281,7 +281,6 @@ def training_distillation(n_epochs, train_loader, valid_loader, model, teacher, 
                 #loss = criterion2(output, output_teacher)
                 #loss = criterion1(output, label)
                 #loss.backward()  # backward pass: compute gradient of the loss with respect to model parameters
-                lr_scheduler.step(valid_loss)
                 optimizer.step()  # perform a single optimization step (parameter update)
                 train_loss += loss.item() * data.size(0)  # update running training loss
 
@@ -298,7 +297,9 @@ def training_distillation(n_epochs, train_loader, valid_loader, model, teacher, 
             valid_loss /= len(valid_loader.sampler)
             train_losses.append(train_loss)
             valid_losses.append(valid_loss)
-            lr_scheduler.step()
+            #lr_scheduler.step()
+            lr_scheduler.step(valid_loss)
+
             print(
                 'epoch: {} \ttraining Loss: {:.6f} \tvalidation Loss: {:.6f}'.format(epoch + 1, train_loss, valid_loss))
 
