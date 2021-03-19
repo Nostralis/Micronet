@@ -76,7 +76,6 @@ class ResNet(nn.Module):
         self.layer4 = self._make_layer(block, 256, num_blocks[3], stride=2)
         self.linear = nn.Linear(256 * block.expansion, num_classes)
 
-
     def _make_layer(self, block, planes, num_blocks, stride):
         strides = [stride] + [1] * (num_blocks - 1)
         layers = []
@@ -118,6 +117,7 @@ class ResNet(nn.Module):
         # print(out.shape)
         out = self.linear(out)
         return out
+
 
 class ResNet3(nn.Module):
     def __init__(self, block, num_blocks, num_classes=10):
@@ -178,18 +178,50 @@ class ResNet2(nn.Module):
         out = self.layer2(out)
         out = F.avg_pool2d(out, 4)
         out = out.view(out.size(0), -1)
-        #print(out.shape)
+        # print(out.shape)
         out = self.linear(out)
-        #print(out.shape)
+        # print(out.shape)
         return out
+
+
+
+class ResNet1(nn.Module):
+    def __init__(self, block, num_blocks, num_classes=10):
+        super(ResNet1, self).__init__()
+        self.in_planes = 32
+
+        self.conv1 = nn.Conv2d(3, 32, kernel_size=3,
+                               stride=1, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(32)
+        self.layer1 = self._make_layer(block, 32, num_blocks[0], stride=1)
+        self.linear = nn.Linear(2048 * block.expansion, num_classes)
+
+    def _make_layer(self, block, planes, num_blocks, stride):
+        strides = [stride] + [1] * (num_blocks - 1)
+        layers = []
+        for stride in strides:
+            layers.append(block(self.in_planes, planes, stride))
+            self.in_planes = planes * block.expansion
+        return nn.Sequential(*layers)
+
+    def forward(self, x):
+        out = F.relu(self.bn1(self.conv1(x)))
+        out = self.layer1(out)
+        out = F.avg_pool2d(out, 4)
+        out = out.view(out.size(0), -1)
+        out = self.linear(out)
+        return out
+
 
 def ResNet18(j):
     if len(j) == 3:
         return ResNet3(BasicBlock, j)
     if len(j) == 2:
         return ResNet2(BasicBlock, j)
+    if len(j) == 1:
+        return ResNet1(BasicBlock, j)
     else:
-        return ResNet(BasicBlock,j)
+        return ResNet(BasicBlock, j)
 
 
 def ResNet34():
@@ -235,6 +267,3 @@ def freeze_resnet(model):
     for name, p in model.named_parameters():
         if "resnet" in name:
             p.requires_grad = False
-
-
-

@@ -8,7 +8,7 @@ import time
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device ' + str(device))
 
-student_ = [2, 2]
+student_ = [4]
 teacher_ = [2, 2, 2, 2]
 
 student = ResNet18(student_)
@@ -19,7 +19,6 @@ student.to(device)
 teacher.to(device)
 
 criterion = nn.CrossEntropyLoss()
-
 
 def teacher_loss(output, label):
     return torch.mean((output - label) ** 2)
@@ -33,5 +32,5 @@ training_distillation(150, train_loader, valid_loader, student, teacher, criteri
 
 evaluation_distillation(student, teacher, test_loader, criterion, teacher_loss, device)
 
-PATH = "model_distill_[2,2].pth"
+PATH = "model_distill_[4].pth"
 torch.save(student, PATH)
