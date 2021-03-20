@@ -32,5 +32,6 @@ training_distillation(150, train_loader, valid_loader, student, teacher, criteri
 
 evaluation_distillation(student, teacher, test_loader, criterion, teacher_loss, device)
 
-PATH = "model_distill_[1,1].pth"
+PATH = "model_distill_[1,1]V2.pth"
 torch.save(student, PATH)
+
