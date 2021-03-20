@@ -17,10 +17,8 @@ model = torch.load(str(teacher_) + ".pth")
 teacher.load_state_dict(model)
 student.to(device)
 teacher.to(device)
-print(student)
-print(teacher)
-criterion = nn.CrossEntropyLoss()
 
+criterion = nn.CrossEntropyLoss()
 
 def teacher_loss(output, label):
     return torch.mean((output - label) ** 2)
