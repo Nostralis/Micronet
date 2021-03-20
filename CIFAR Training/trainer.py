@@ -280,7 +280,7 @@ def training_distillation(n_epochs, train_loader, valid_loader, model, teacher, 
                 loss = 0.1*criterion1(output, label) + 0.1*criterion2(output, output_teacher)  # calculate the loss
                 #loss = criterion2(output, output_teacher)
                 #loss = criterion1(output, label)
-                #loss.backward()  # backward pass: compute gradient of the loss with respect to model parameters
+                loss.backward()  # backward pass: compute gradient of the loss with respect to model parameters
                 optimizer.step()  # perform a single optimization step (parameter update)
                 train_loss += loss.item() * data.size(0)  # update running training loss
 
