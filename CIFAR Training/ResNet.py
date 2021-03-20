@@ -84,8 +84,6 @@ class ResNet(nn.Module):
             self.in_planes = planes * block.expansion
         return nn.Sequential(*layers)
 
-
-
     def forward(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
         out = self.layer1(out)
@@ -162,7 +160,6 @@ class ResNet2(nn.Module):
         out = self.linear(out)
         # print(out.shape)
         return out
-
 
 
 class ResNet1(nn.Module):
