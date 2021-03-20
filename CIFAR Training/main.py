@@ -8,14 +8,13 @@ import time
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device ' + str(device))
 
-student_ = [4]
+student_ = [1,1]
 teacher_ = [2, 2, 2, 2]
 
 student = ResNet18(student_)
 teacher = ResNet18(teacher_)
 model = torch.load(str(teacher_) + ".pth")
 teacher.load_state_dict(model)
-student = torch.load("model_distill_[4]V2.pth")
 student.to(device)
 teacher.to(device)
 
@@ -33,5 +32,5 @@ training_distillation(150, train_loader, valid_loader, student, teacher, criteri
 
 evaluation_distillation(student, teacher, test_loader, criterion, teacher_loss, device)
 
-PATH = "model_distill_[4]V3.pth"
+PATH = "model_distill_[1,1].pth"
 torch.save(student, PATH)
