@@ -8,7 +8,7 @@ import time
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device ' + str(device))
 
-student_ = [1,1]
+student_ = [2, 2]
 teacher_ = [2, 2, 2, 2]
 
 student = ResNet18(student_)
