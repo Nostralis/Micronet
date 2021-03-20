@@ -11,7 +11,7 @@ print('Using device ' + str(device))
 student_ = [1, 1]
 teacher_ = [2, 2, 2, 2]
 
-student = ResNet18(student_)
+student = torch.load("model_distill_[1,1].pth")
 teacher = ResNet18(teacher_)
 model = torch.load(str(teacher_) + ".pth")
 teacher.load_state_dict(model)
