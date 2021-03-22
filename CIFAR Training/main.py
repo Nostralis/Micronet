@@ -37,15 +37,15 @@ optimizer4 = torch.optim.SGD(model4.parameters(), 0.1, weight_decay=0.0005)
 
 print("model [4]")
 training(150, train_loader, valid_loader, model1, criterion, optimizer1, 0.1, device, milestone=[80, 130])
-evaluation(model4, test_loader, criterion, device)
+evaluation(model1, test_loader, criterion, device)
 
 print("model [1,1]")
 training(150, train_loader, valid_loader, model2, criterion, optimizer2, 0.1, device, milestone=[80, 130])
-evaluation(model4, test_loader, criterion, device)
+evaluation(model2, test_loader, criterion, device)
 
 print("model [2,2]")
 training(150, train_loader, valid_loader, model3, criterion, optimizer3, 0.1, device, milestone=[80, 130])
-evaluation(model4, test_loader, criterion, device)
+evaluation(model3, test_loader, criterion, device)
 
 print("model [2,2,2]")
 training(150, train_loader, valid_loader, model4, criterion, optimizer4, 0.1, device, milestone=[80, 130])
