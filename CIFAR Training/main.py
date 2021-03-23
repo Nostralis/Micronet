@@ -30,42 +30,18 @@ model4.to(device)
 
 criterion = nn.CrossEntropyLoss()
 
-optimizer1 = torch.optim.SGD(model1.parameters(), 0.1, weight_decay=0.0005)
-optimizer2 = torch.optim.SGD(model2.parameters(), 0.1, weight_decay=0.0005)
-optimizer3 = torch.optim.SGD(model3.parameters(), 0.1, weight_decay=0.0005)
-optimizer4 = torch.optim.SGD(model4.parameters(), 0.1, weight_decay=0.0005)
-
-print("model [4]")
-training(150, train_loader, valid_loader, model1, criterion, optimizer1, 0.1, device, milestone=[80, 130])
-evaluation(model1, test_loader, criterion, device)
-
-print("model [1,1]")
-training(150, train_loader, valid_loader, model2, criterion, optimizer2, 0.1, device, milestone=[80, 130])
-evaluation(model2, test_loader, criterion, device)
-
-print("model [2,2]")
-training(150, train_loader, valid_loader, model3, criterion, optimizer3, 0.1, device, milestone=[80, 130])
-evaluation(model3, test_loader, criterion, device)
-
-print("model [2,2,2]")
-training(150, train_loader, valid_loader, model4, criterion, optimizer4, 0.1, device, milestone=[80, 130])
-evaluation(model4, test_loader, criterion, device)
-
-
-
-""""
 pruner(model1, 0, 0, 0)
-print("model 1,1,1,1")
+print("model 4")
 print_nonzeros(model1)
 evaluation(model1, test_loader, criterion, device)
 
 pruner(model2, 0, 0, 0)
-print("model 2,2,2,2")
+print("model 1,1")
 print_nonzeros(model2)
 evaluation(model2, test_loader, criterion, device)
 
 pruner(model3, 0, 0, 0)
-print("1,1,1")
+print("2,2")
 print_nonzeros(model3)
 evaluation(model3, test_loader, criterion, device)
 
@@ -74,7 +50,7 @@ print("2,2,2")
 print_nonzeros(model4)
 evaluation(model4, test_loader, criterion, device)
 
-
+"""
 student_ = [1, 1]
 teacher_ = [2, 2, 2, 2]
 
